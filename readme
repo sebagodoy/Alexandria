@@ -1,0 +1,14 @@
+This is the AlexandriaLog project repository
+02.Dic.2024
+
+This is a simple django task-manager project for local database managment
+of task with CRUD functionalities. It has customized models and functions
+for the managment of tasks within my personal workflow working with several
+molecular calculations but, in principle, may be useful for others.
+
+This project is still in its first stages, fields and functinalities may 
+be added as I start considering them useful for my workflow. 
+Thanks for lurking.
+
+Main contributors:
+- Sebastian Godoy-Gutierrez (sebadgogu.at.gmail.com)

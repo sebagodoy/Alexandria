@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<a href="/"><h2>Alexandria log!</h2></a>
+<h3>Manage</h3>
+<p>Current: Total tasks={{StatsTotal}} ,
+    {% if StatsActive > 4 %}
+        <span style="color: Violet">Active={{StatsActive}}</span>
+    {% else %}
+        <span style="color: Dodgerblue">Active={{StatsActive}}</span>
+    {% endif %}
+    . Showing last 50, <a href="{% url 'show-more' 100 %}" >show more</a>.
+</p>
+<p> Database: last update
+    {% if db_updated %}
+        ({{db_updated}})
+    {% endif %},
+    <a href="bkp">local backup</a>
+    {% if bkp_updated %}
+        ({{bkp_updated}})
+    {% endif %},
+    <a href="sbkp">secure backup (~/)</a>
+    {% if sbkp_updated %}
+        ({{sbkp_updated}})
+    {% endif %}.</p>
+
+
+{% if Updating %}
+    <h3>Updating task</h3>
+{% elif Deleting %}
+    <h3>Deleting task</h3>
+{% else %}
+    <h3>Creating task</h3>
+{% endif %}
+
+{% if Deleting %}
+    <table border="1px solid black"  bordercolor="green">
+        <tr>
+            <td>#{{Deleting.id}}</td>
+            <td>{{Deleting.runID}}</td>
+            <td>{{Deleting.title}}</td>
+            <td>{{Deleting.active}}</td>
+            <td>{{Deleting.created}}</td>
+            <td>{{Deleting.lastedited}}</td>
+            <td><form method="POST" action="">
+                    {% csrf_token %}
+                <input class="btn" type="submit" name="Delete task" value="Delete!">
+            </td>
+        </tr>
+    </table>
+{% else %}
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% if Updating %}
+            #{{Updating.id}}
+        {% endif %}
+        {{RunForm.runID}}
+        {{RunForm.title}}
+        {{RunForm.active}} running?
+        {% if Updating %}
+            <input class="btn" type="submit" name="Create task">
+        {% else %}
+            <input class="btn" type="submit" name="Update task">
+        {% endif %}
+    </form>
+{% endif %}
+
+
+<h3>Log of all tasks</h3>
+<table border="1px solid black"  bordercolor="green">
+    <tr>
+        <th></th>
+        <th>ID</th>
+        <th>Task name</th>
+        <th>active?</th>
+        <th>created</th>
+        <th>last edited</th>
+    </tr>
+    {% for task in RunLogs %}
+    <tr>
+        <td>#{{task.id}}</td>
+        <td>{{task.runID}}</td>
+        <td>{{task}}</td>
+        {% if task.active %}
+            <td style="color:red;">{{task.active}}</td>
+        {% else %}
+            <td style="color:blue;">{{task.active}}</td>
+        {% endif %}
+        <td>{{task.created}}</td>
+        <td>{{task.lastedited}}</td>
+        <td><a href="{% url 'update-task' task.id %}" >Update</a></td>
+        <td><a href="{% url 'delete-task' task.id %}"> Delete </a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
